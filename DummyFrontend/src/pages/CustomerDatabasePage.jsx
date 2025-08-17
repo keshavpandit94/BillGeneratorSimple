@@ -41,7 +41,7 @@ const CustomerDatabasePage = () => {
     };
 
     const handlePreview = (invoiceNumber) => {
-        navigate(`/perview/${invoiceNumber}`)
+        navigate(`/preview/${invoiceNumber}`)
     }
 
     const filteredCustomers = customers.filter((customer) =>

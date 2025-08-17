@@ -12,7 +12,7 @@ const CustomerDatabase = ({ customers, onEdit, onDelete, searchTerm, setSearchTe
         {/* Database Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Customer Database</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Bill History</h2>
             <div className="flex gap-2">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -119,13 +119,13 @@ const CustomerDatabase = ({ customers, onEdit, onDelete, searchTerm, setSearchTe
                         >
                           <Printer className="w-4 h-4" />
                         </button>
-                        <button
+                        {/* <button
                           className="text-red-600 hover:text-red-900"
                           title="Delete"
                           onClick={() => onDelete(customer.invoiceNumber)}
                         >
                           <Trash2 className="w-4 h-4" />
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   </tr>

@@ -3,32 +3,26 @@ import React from 'react';
 
 const BillPreview = ({ invoiceData }) => {
 
-
   const calculateSubtotal = () => {
-    return (
-      invoiceData?.items?.reduce((sum, item) => sum + item.quantity * item.price, 0) || 0
-    );
+    return invoiceData?.items?.reduce((sum, item) => {
+      const quantity = parseFloat(item.quantity) || 0;
+      const offerPrice = parseFloat(item.offerPrice) || 0;
+      return sum + quantity * offerPrice;
+    }, 0) || 0;
   };
 
-  const calculateTax = () => {
-    return calculateSubtotal() * 0.10; // 10% tax
-  };
+  const calculateTax = () => calculateSubtotal() * 0.10; // 10% tax
 
-  const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax();
-  };
+  const calculateTotal = () => calculateSubtotal() + calculateTax();
 
   const calculateDue = () => {
     const paid = parseFloat(invoiceData?.paidAmount) || 0;
     return Math.max(0, calculateTotal() - paid);
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => window.print();
 
   return (
-
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="p-6 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-900">Invoice Bill</h2>
@@ -58,7 +52,7 @@ const BillPreview = ({ invoiceData }) => {
             <p><strong>Invoice No:</strong> {invoiceData?.invoiceNumber || '--'}</p>
             <p><strong>Date:</strong> {invoiceData?.date || '--'}</p>
             <p><strong>Customer Name:</strong> {invoiceData?.name || '--'}</p>
-            <p><strong>Mobile No:</strong> {invoiceData?.mobile || '--'}</p>
+            <p><strong>Mobile No:</strong> {invoiceData?.mobileNumber || '--'}</p>
           </div>
         </div>
 
@@ -69,7 +63,8 @@ const BillPreview = ({ invoiceData }) => {
               <tr>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Item</th>
                 <th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Qty</th>
-                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Price</th>
+                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Original Price</th>
+                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Offer Price</th>
                 <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Total</th>
               </tr>
             </thead>
@@ -78,13 +73,16 @@ const BillPreview = ({ invoiceData }) => {
                 <tr key={index} className="border-t border-gray-200">
                   <td className="px-4 py-2 text-sm">{item.product || '-'}</td>
                   <td className="px-4 py-2 text-sm text-center">{item.quantity}</td>
-                  <td className="px-4 py-2 text-sm text-right">₹ {parseFloat(item.price || 0).toFixed(2)}</td>
-                  <td className="px-4 py-2 text-sm text-right">₹ {(parseFloat(item.price || 0) * parseInt(item.quantity || 0)).toFixed(2)}</td>
+                  <td className="px-4 py-2 text-sm text-right">₹ {parseFloat(item.originalPrice || 0).toFixed(2)}</td>
+                  <td className="px-4 py-2 text-sm text-right">₹ {parseFloat(item.offerPrice || 0).toFixed(2)}</td>
+                  <td className="px-4 py-2 text-sm text-right">₹ {(parseFloat(item.offerPrice || 0) * parseInt(item.quantity || 0)).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+
+        {/* Totals */}
         <div className="space-y-2 text-right">
           <div className="flex justify-between">
             <span>Subtotal:</span>
@@ -113,11 +111,6 @@ const BillPreview = ({ invoiceData }) => {
         </div>
       </div>
     </div>
-
-
-
-
-
   );
 };
 

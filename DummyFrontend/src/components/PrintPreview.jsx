@@ -3,7 +3,7 @@ import { Printer } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function Preview() {
+function PrintPreview() {
   const { invoiceNumber } = useParams();
   const navigate = useNavigate();
 
@@ -16,14 +16,17 @@ function Preview() {
       .then((res) => {
         const data = res.data.data;
 
+        console.log(data);
         // Convert comma-separated fields to array of item objects
         const products = data.product?.split(',') || [];
-        const prices = data.price?.split(',') || [];
+        const originalPrice = data.originalPrice?.split(',') || [];
+        const offerPrice = data.offerPrice?.split(',') || [];
         const quantities = data.quantity?.split(',') || [];
 
         const combinedItems = products.map((product, index) => ({
           product: product.trim(),
-          price: parseFloat(prices[index]?.trim() || 0),
+          originalPrice: parseFloat(originalPrice[index]?.trim() || 0),
+          offerPrice: parseFloat(offerPrice[index]?.trim() || 0),
           quantity: parseInt(quantities[index]?.trim() || 0),
         }));
 
@@ -52,7 +55,7 @@ function Preview() {
       <div className="p-6 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-900">Invoice Bill</h2>
         <button
-          onClick={() => window.print()}
+          onClick={handlePrint}
           className="text-blue-600 hover:text-blue-800 flex items-center"
         >
           <Printer className="w-4 h-4 mr-1" />
@@ -88,7 +91,8 @@ function Preview() {
               <tr>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Item</th>
                 <th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Qty</th>
-                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Price</th>
+                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Original Price</th>
+                <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Offer Price</th>
                 <th className="px-4 py-2 text-right text-sm font-medium text-gray-700">Total</th>
               </tr>
             </thead>
@@ -97,9 +101,10 @@ function Preview() {
                 <tr key={index} className="border-t border-gray-200">
                   <td className="px-4 py-2 text-sm">{item.product}</td>
                   <td className="px-4 py-2 text-sm text-center">{item.quantity}</td>
-                  <td className="px-4 py-2 text-sm text-right">₹ {item.price.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-sm text-right">₹ {item.originalPrice.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-sm text-right">₹ {item.offerPrice.toFixed(2)}</td>
                   <td className="px-4 py-2 text-sm text-right">
-                    ₹ {(item.price * item.quantity).toFixed(2)}
+                    ₹ {(item.offerPrice * item.quantity).toFixed(2)}
                   </td>
                 </tr>
               ))}
@@ -139,4 +144,4 @@ function Preview() {
   );
 }
 
-export default Preview;
+export default PrintPreview;

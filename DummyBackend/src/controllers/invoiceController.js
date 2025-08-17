@@ -17,7 +17,7 @@ const getAllInvoicesData = (req, res) => {
 const getTotalInvoiceCount = (req, res) => {
   const data = readData();
   const count = data.length
-  console.log("count data :", count)
+  // console.log("count data :", count)
   res
     .json(
       new ApiResponse(200,count, "data counted"));
@@ -106,7 +106,8 @@ const addInvoiceData = (req, res) => {
   if (Array.isArray(invoice.items)) {
     invoice.product = invoice.items.map(i => i.product).join(', ');
     invoice.quantity = invoice.items.map(i => i.quantity).join(', ');
-    invoice.price = invoice.items.map(i => i.price).join(', ');
+    invoice.originalPrice = invoice.items.map(i => i.originalPrice).join(', ');
+    invoice.offerPrice = invoice.items.map(i => i.offerPrice).join(', ');
   }
 
   data.push(invoice);
@@ -202,10 +203,10 @@ const downloadExcel = (req, res) => {
   if (!fs.existsSync(filePath)) {
     return res
       .status(404)
-      .json(new ApiError(404, 'Excel file not found'));
+      .json(new ApiError(404, 'Ajit'));
   }
 
-  res.download(filePath, 'invoices.xlsx', (err) => {
+  res.download(filePath, 'data.xlsx', (err) => {
     if (err) {
       console.error('Download error:', err);
       return res
